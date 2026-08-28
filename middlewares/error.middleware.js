@@ -1,33 +1,36 @@
-//this middleware check for error and shows us if they found any
+// middleware/errorMiddleware.js
 
 const errorMiddleware = (err, req, res, next) => {
-  try{
- let error = { ...err};
+  // ✅ Remove the try-catch block - it's not needed here
+  let error = { ...err };
+  error.message = err.message;
 
- error.message = err.message;
+  console.log("Error:", err);
 
- console.log(err);
-
- // let try to find what kind of error we have(it is mongoose error most of the time)
-
- //mongoose bad objectId
- if(err.name === 'castError'){
-  const message = 'resourse not found';
-  error = new Error(message)
-  error.statusCode = 404;
- }
-
- //mongoose duplicate key
- if(err.code === 11000){
-  const message = 'duplicate field value entered'
-  error = new Error(message);
-  error.statusCode = 400
- }
-
-
-  } catch(error){
-    next(error)
+  // Mongoose bad ObjectId
+  if (err.name === 'CastError') {
+    const message = 'Resource not found';
+    error = new Error(message);
+    error.statusCode = 404;
   }
-}
+
+  // Mongoose duplicate key
+  if (err.code === 11000) {
+    const message = 'Duplicate field value entered';
+    error = new Error(message);
+    error.statusCode = 400;
+  }
+
+  // ✅ Send the response
+  const statusCode = error.statusCode || 500;
+  const message = error.message || 'Internal server error';
+
+  res.status(statusCode).json({
+    success: false,
+    message: message,
+    // Include stack trace in development only
+    ...(process.env.NODE_ENV === 'development' && { stack: error.stack })
+  });
+};
 
 export default errorMiddleware;
