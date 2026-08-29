@@ -14,7 +14,7 @@ export const authorize = async (req, res, next) => {
     }
 
     if (!token) {
-      return res.status(401).json({ message: 'unauthorized' });
+      return res.status(401).json({ message: 'unauthorized' })
     }
 
     const decoded = jwt.verify(token, JWT_SECRET);
@@ -25,7 +25,7 @@ export const authorize = async (req, res, next) => {
     }
 
     req.user = user;
-    next(); // ✅ Added: missing next() call
+    next(); // Added: missing next() call
   } catch (error) {
     res.status(401).json({ message: 'unauthorized', error: error.message });
   }
