@@ -1,5 +1,3 @@
-// username : kalidxcode1221_db_user
-//password: LJ5qUvhv8dTkXanY
 
 import cookieParser from 'cookie-parser';
 import express from 'express';
