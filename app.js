@@ -1,6 +1,8 @@
 
 import cookieParser from 'cookie-parser';
 import express from 'express';
+import dns from 'dns';
+
 
 import { PORT } from './config/env.js';
 
@@ -10,6 +12,9 @@ import subscriptionRouter from './routs/subscription.routs.js';
 import connectToDatabase from './mongo DB/mongoDB.js';
 import errorMiddleware from './middlewares/error.middleware.js';
 import arcjetMiddleware from './middlewares/arcjet.middleware.js';
+import workflowRouter from './routs/workflow.routs.js';
+
+dns.setServers(['8.8.8.8', '1.1.1.1']);
 
 const app = express();
 
@@ -22,6 +27,7 @@ app.use(arcjetMiddleware) // Use Arcjet middleware for all routes
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/subscriptions', subscriptionRouter)
+app.use('/api/v1/workflow', workflowRouter)
 
 app.use(errorMiddleware)
 

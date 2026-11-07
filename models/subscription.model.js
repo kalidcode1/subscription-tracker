@@ -1,33 +1,39 @@
-import { Timestamp } from "mongodb";
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const subscriptionSchema = new mongoose.schema(
+const subscriptionSchema = new mongoose.Schema(
   {
-    name:{type: String, required:[true, 'subscription name name is required'],
+    name: {
+      type: String,
+      required: [true, 'subscription name is required'],
       trim: true,
       minLength: 2,
       maxLength: 50,
     },
-    price:{
+    price: {
       type: Number,
       required: [true, 'subscription price is required'],
-      min:[0, 'price must be greater then 0'],
-      max:[1000, 'price must be less then 1000'],
+      min: [0, 'price must be greater than 0'],
+      max: [1000, 'price must be less than 1000'],
     },
-    frequency:{
+    frequency: {
       type: String,
-      enum: ['daily', 'weekly', 'monthly']
+      enum: ['daily', 'weekly', 'monthly'],
     },
-    catagory:{
+    category: {
       type: String,
-      enum:['sports', 'news', 'entertainment'],
+      enum: ['sports', 'news', 'entertainment'],
       required: true,
-    }
-  }, {timestamp: true}
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: [true, 'subscription must belong to a user'],
+      index: true,
+    },
+  },
+  { timestamps: true }
+);
 
+const Subscription = mongoose.model('subscription', subscriptionSchema);
 
-)
-
-const subscription = mongoose.modelS('subscription', subscriptionSchema);
-
-export default subscription
+export default Subscription;
